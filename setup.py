@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='django-imagheofmodel',
-    version=__import__('imagheofmodel').__version__,
+    name='django-imageofmodel',
+    version=__import__('imageofmodel').__version__,
     description='Holds Image of Model for Django',
     #long_description=open('docs/overview.txt').read(),
     author='Viktor Shulika',
