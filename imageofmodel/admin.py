@@ -17,5 +17,5 @@ class ImageOfModelInline(GenericTabularInline):
     formset = ImageFormset
     extra = 1
 
-class OneImageOfModelInline(ImageOfModelInline)
+class OneImageOfModelInline(ImageOfModelInline):
     max_num = 1
