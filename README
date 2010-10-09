@@ -1,0 +1,16 @@
+Simple Django image holder for Model.
+
+USAGE
+
+settings.py:
+Add to INSTALLED_APPS 'imageofmodel'
+./manage syncdb
+
+models.py:
+from imageofmodel.models import ImageOfModel
+from django.contrib.contenttypes import generic
+images = generic.GenericRelation(ImageOfModel)
+
+admin.py:
+from imageofmodel.admin import ImageOfModelInline
+inlines = (ImageOfModelInline, )
