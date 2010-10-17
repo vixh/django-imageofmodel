@@ -12,5 +12,9 @@ from django.contrib.contenttypes import generic
 images = generic.GenericRelation(ImageOfModel)
 
 admin.py:
-from imageofmodel.admin import ImageOfModelInline
+from imageofmodel.admin import ImageOfModelInline OR OneImageOfModelInline FOR one image only
 inlines = (ImageOfModelInline, )
+
+template.html
+Main image <img src='model.images.main_image.thumbnail_image.url'/>
+Check specs.py for more image's sizes (thumbnail_image, small_thumbnail_image, display, original_image)
