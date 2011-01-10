@@ -1,0 +1,4 @@
+local_*
+*.pyc
+*.sqlite
+media/photos

@@ -18,6 +18,10 @@ class ImageOfModelInline(GenericTabularInline):
     extra = 1
 
 
+class OneImageOfModelInline(ImageOfModelInline):
+    max_num = 1
+
+
 class OptionalImageOfModelInline(GenericTabularInline):
     model = ImageOfModel
     extra = 1

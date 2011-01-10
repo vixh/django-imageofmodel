@@ -7,6 +7,15 @@ from django.contrib.contenttypes import generic
 from imagekit.models import ImageModel
 from fields import ImageTranslifyField
 
+class ModelImagesManager(models.Manager):
+    def main_image(self):
+        '''
+        return main image
+        '''
+        if self.count():
+            return self.all().order_by('order')[0]
+        return None
+
 class ImageOfModel(ImageModel):
     name = models.CharField(u'Название', max_length=255)
     original_image = ImageTranslifyField(u'Фотка', upload_to='photos')
@@ -15,6 +24,8 @@ class ImageOfModel(ImageModel):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
+    
+    objects = ModelImagesManager()
 
     class IKOptions:
         # This inner class is where we define the ImageKit options for the model
