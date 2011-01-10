@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-from django.db import models
+import re, os
+
 from django.db import models
 from django.db.models import Max
 from django.contrib.contenttypes.models import ContentType
@@ -51,18 +53,18 @@ class ImageOfModel(ImageModel):
         Сеошное название. Но не обязательно равно названию картинки на диске, джанго может добавить _ вслучае повторения названия
         Без разширения
         '''
-        raise '%s_%s' % (slugify_ru(self.name), slugify_ru(self.content_object.__unicode__()))
+        return '%s-%s' % (slugify_ru(self.name), slugify_ru(self.content_object.__unicode__()))
     
     def save(self, *args, **kwargs):
         content_type = ContentType.objects.get_for_model(self.content_object)
         if self.order is None and self.content_object:
             self.order = (ImageOfModel.objects.filter(content_type__pk=content_type.id, object_id=self.content_object.id).aggregate(Max('order')).get('order__max') or 0) + 10
         
-        if self.image and self.image.file:
-            if not re.search(self.img_name(), self.image.name): # если картинка нефеншуйная
+        if self.original_image and self.original_image.file:
+            if not re.search(self.img_name(), self.original_image.name): # если картинка нефеншуйная
                 name = self.img_name()
-                upl_name, ext = os.path.splitext(self.image.file.name)
-                self.image.save(name+ext, self.image.file, save=False)
-            self.image.file.close() # в проверке self.image.file открывает фаил и бывает IOError: [Errno 24] Too many open files
+                upl_name, ext = os.path.splitext(self.original_image.file.name)
+                self.original_image.save(name+ext, self.original_image.file, save=False)
+            self.original_image.file.close() # в проверке self.image.file открывает фаил и бывает IOError: [Errno 24] Too many open files
         
         super(self.__class__, self).save(*args, **kwargs)
