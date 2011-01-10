@@ -5,7 +5,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
 from imagekit.models import ImageModel
+from pytils.translit import slugify as slugify_ru
+
 from fields import ImageTranslifyField
+
 
 class ModelImagesManager(models.Manager):
     def main_image(self):
@@ -30,7 +33,8 @@ class ImageOfModel(ImageModel):
     class IKOptions:
         # This inner class is where we define the ImageKit options for the model
         spec_module = 'imageofmodel.specs'
-        cache_dir = 'photos'
+        cache_dir = ''
+        cache_filename_format = '%(specname)s/%(filename)s.%(extension)s'
         image_field = 'original_image'
         save_count_as = 'num_views'
     
@@ -42,8 +46,23 @@ class ImageOfModel(ImageModel):
     def __unicode__(self):
         return "%s" % (self.name,)
     
+    def img_name(self):
+        '''
+        Сеошное название. Но не обязательно равно названию картинки на диске, джанго может добавить _ вслучае повторения названия
+        Без разширения
+        '''
+        raise '%s_%s' % (slugify_ru(self.name), slugify_ru(self.content_object.__unicode__()))
+    
     def save(self, *args, **kwargs):
         content_type = ContentType.objects.get_for_model(self.content_object)
         if self.order is None and self.content_object:
             self.order = (ImageOfModel.objects.filter(content_type__pk=content_type.id, object_id=self.content_object.id).aggregate(Max('order')).get('order__max') or 0) + 10
+        
+        if self.image and self.image.file:
+            if not re.search(self.img_name(), self.image.name): # если картинка нефеншуйная
+                name = self.img_name()
+                upl_name, ext = os.path.splitext(self.image.file.name)
+                self.image.save(name+ext, self.image.file, save=False)
+            self.image.file.close() # в проверке self.image.file открывает фаил и бывает IOError: [Errno 24] Too many open files
+        
         super(self.__class__, self).save(*args, **kwargs)
