@@ -16,3 +16,8 @@ class ImageOfModelInline(GenericTabularInline):
     model = ImageOfModel
     formset = ImageFormset
     extra = 1
+
+
+class OptionalImageOfModelInline(GenericTabularInline):
+    model = ImageOfModel
+    extra = 1
