@@ -20,6 +20,15 @@ class ModelImagesManager(models.Manager):
         if self.count():
             return self.all().order_by('order')[0]
         return None
+    
+    def secondary_images(self):
+        '''
+        return ordered images without main
+        '''
+        img_count = self.count()
+        if img_count:
+            return self.all().order_by('order')[1:img_count]
+        return []
 
 class ImageOfModel(ImageModel):
     name = models.CharField(u'Название', max_length=255)

@@ -11,8 +11,8 @@ class ResizeThumb(processors.Resize):
 
 # first we define our thumbnail resize processor 
 class SmallResizeThumb(processors.Resize): 
-    width = 90 
-    height = 60 
+    width = 110 
+    height = 83 
     crop = True
 
 # now we define a display size resize processor
@@ -27,18 +27,19 @@ class EnchanceThumb(processors.Adjustment):
 
 # now we can define our thumbnail spec 
 class Thumbnail(ImageSpec): 
-    access_as = 'thumbnail_image' 
+    access_as = 'thumb' 
     pre_cache = True 
     processors = [ResizeThumb, EnchanceThumb]
 
 # now we can define our thumbnail spec 
 class SmallThumbnail(ImageSpec): 
-    access_as = 'small_thumbnail_image' 
+    access_as = 'small_thumb' 
     pre_cache = True 
     processors = [SmallResizeThumb, EnchanceThumb] 
 
 # and our display spec
 class Display(ImageSpec):
+    quality = 100
     increment_count = True
     pre_cache = True 
     processors = [ResizeDisplay]
